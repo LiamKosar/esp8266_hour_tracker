@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <EEPROM.h>
-#include <string>
 
 #define VIBRATION_SENSOR_PIN D2
 int motion_detected = 0;
