@@ -1,10 +1,15 @@
 #include <Arduino.h>
 #include <EEPROM.h>
+#include "connectToWifi.h"
+#include "printApiResponse.h"
 
 #define VIBRATION_SENSOR_PIN D2
 int motion_detected = 0;
 unsigned long total_active_time = 0;
 unsigned long previous_total_active_time = 0;
+
+std::string ssid = "xxxx";
+std::string password = "xxxx";
 
 // Vibration sensor reading delay (ms)
 int reading_delay = 5000;
@@ -19,14 +24,17 @@ void writeActiveTime();
 void updateEEPROM();
 
 void setup() {
-  readActiveTime();
+  //readActiveTime();
   Serial.begin(115200);
+  connectToWifi(ssid, password);
+  //printApiResponse();
+  postToApi();
 }
 
 void loop() {
-  takeFiveReadings();
-  updateEEPROM();
-  delay(reading_delay);
+  // takeFiveReadings();
+  // updateEEPROM();
+  // delay(reading_delay);
 }
 
 /*Takes 5 readings, one every 50ms
@@ -46,8 +54,8 @@ void takeFiveReadings() {
     total_active_time += reading_delay + ((reading_delay/50) * 5);
   }
 
-  Serial.println(previous_total_active_time);
-  Serial.println(total_active_time);
+  // Serial.println(previous_total_active_time);
+  // Serial.println(total_active_time);
 
 }
 
@@ -85,7 +93,7 @@ void updateEEPROM() {
   if ((total_active_time - previous_total_active_time) >= (unsigned long)write_delay) {
     writeActiveTime();
     readActiveTime();
-    Serial.println("Updated");
+    // Serial.println("Updated");
     previous_total_active_time = total_active_time;
   }
 }
